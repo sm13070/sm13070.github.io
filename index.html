@@ -1,10 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draggable Flip Card</title>
+    <style>
+        body {
+            /* Add an area to drag the card within */
+            min-height: 500px; 
+            padding: 20px;
+            position: relative;
+        }
+
+        .flip-card {
+            width: 200px;
+            height: 300px;
+            background-color: transparent;
+            perspective: 1000px; /* Gives the 3D effect */
+            cursor: move; /* Changes cursor to indicate it's draggable */
+            position: absolute; /* Allows for drag positioning via JS */
+            top: 50px; /* Initial position */
+            left: 50px; /* Initial position */
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d; /* Preserves 3D position of children */
+        }
+
+        /* Class added by JavaScript to trigger the flip */
+        .flip-card.is-flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; /* Safari */
+            backface-visibility: hidden; /* Hide the back side until flipped */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            
+        }
+
+        .flip-card-front {
+            
+        }
+
+        .flip-card-back {
+       
+            transform: rotateY(180deg); /* Start from flipped position */
+        }
+    </style>
+</head>
 <body>
 
-<p><b>This text is bold</b></p>
-<p><i>This text is italic</i></p>
-<p>This is<sub> subscript</sub> and <sup>superscript</sup></p>
+    <div class="flip-card" draggable="true" id="myCard">
+        <div class="flip-card-inner">
+            <div class="flip-card-front">
+                <img src="img_avatar.png" alt="Avatar" style="width:300px;height:300px;">
+            </div>
+            <div class="flip-card-back">
+                <img src="https://lh4.googleusercontent.com/-8tqTFxi2ebU/Ufo4j_thf7I/AAAAAAAADFM/_ZBQctm9e8E/w270-h203-no/flower.jpg"
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to make an element draggable (custom implementation for easier positioning)
+        function dragElement(elmnt) {
+            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            
+            // If you only want to drag from the front face (e.g., if back has buttons)
+            // use: if (document.getElementById(elmnt.id + "header")) { ... }
+
+            elmnt.onmousedown = dragMouseDown;
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // Get the mouse cursor position at startup:
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                // Call a function whenever the cursor moves:
+                document.onmousemove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // Calculate the new cursor position:
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // Set the element's new position:
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                // Stop moving when mouse button is released:
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+
+        // Function to flip the card on click
+        function setupFlip(cardElement) {
+            cardElement.addEventListener('click', function(event) {
+                // Prevent drag initiation from interfering with flip
+                if (event.detail === 1) { // Only flip on a single click
+                   this.classList.toggle('is-flipped');
+                }
+            });
+        }
+
+        // Initialize the card
+        const myCard = document.getElementById("myCard");
+        dragElement(myCard); // Make it draggable
+        setupFlip(myCard); // Make it flippable
+    </script>
 
 </body>
 </html>
