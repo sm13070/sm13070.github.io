@@ -62,8 +62,70 @@
 
 </head>
 <body>
+<img src="fracture bg.png">
 
-<div class="flip-card" draggable="true" id="myCard">
+<div id="draggable" class="dragme"></div>
+<img src="fracture door.png" class="dragme">
+<img src="fracture friend.png" class="dragme">
+<img src="fracture red alone.png" class="dragme">
+<img src="fracture window.png" class="dragme">
+<style>
+  .dragme {
+  position: relative;
+  cursor: move;
+
+</style>
+
+<script>
+
+  	function startDrag(e) {
+				// determine event object
+				if (!e) {
+					var e = window.event;
+				}
+                if(e.preventDefault) e.preventDefault();
+
+				// IE uses srcElement, others use target
+				var targ = e.target ? e.target : e.srcElement;
+
+				if (targ.className != 'dragme') {return};
+				// calculate event X, Y coordinates
+					offsetX = e.clientX;
+					offsetY = e.clientY;
+
+				// assign default values for top and left properties
+				if(!targ.style.left) { targ.style.left='0px'};
+				if (!targ.style.top) { targ.style.top='0px'};
+
+				// calculate integer values for top and left 
+				// properties
+				coordX = parseInt(targ.style.left);
+				coordY = parseInt(targ.style.top);
+				drag = true;
+
+				// move div element
+					document.onmousemove=dragDiv;
+                return false;
+				
+			}
+			function dragDiv(e) {
+				if (!drag) {return};
+				if (!e) { var e= window.event};
+				var targ=e.target?e.target:e.srcElement;
+				// move div element
+				targ.style.left=coordX+e.clientX-offsetX+'px';
+				targ.style.top=coordY+e.clientY-offsetY+'px';
+				return false;
+			}
+			function stopDrag() {
+				drag=false;
+			}
+			window.onload = function() {
+				document.onmousedown = startDrag;
+				document.onmouseup = stopDrag;
+			}
+</script>
+	<div class="flip-card" draggable="true" id="myCard">
         <div class="flip-card-inner">
             <div class="flip-card-front">
                 <img src="fracturered text.png">
@@ -131,70 +193,6 @@
         setupFlip(myCard); // Make it flippable
     </script>
 
-
-<img src="fracture bg.png">
-
-<div id="draggable" class="dragme"></div>
-<img src="fracture door.png" class="dragme">
-<img src="fracture friend.png" class="dragme">
-<img src="fracture red alone.png" class="dragme">
-<img src="fracture window.png" class="dragme">
-<style>
-  .dragme {
-  position: relative;
-  cursor: move;
-
-</style>
-
-<script>
-
-  	function startDrag(e) {
-				// determine event object
-				if (!e) {
-					var e = window.event;
-				}
-                if(e.preventDefault) e.preventDefault();
-
-				// IE uses srcElement, others use target
-				var targ = e.target ? e.target : e.srcElement;
-
-				if (targ.className != 'dragme') {return};
-				// calculate event X, Y coordinates
-					offsetX = e.clientX;
-					offsetY = e.clientY;
-
-				// assign default values for top and left properties
-				if(!targ.style.left) { targ.style.left='0px'};
-				if (!targ.style.top) { targ.style.top='0px'};
-
-				// calculate integer values for top and left 
-				// properties
-				coordX = parseInt(targ.style.left);
-				coordY = parseInt(targ.style.top);
-				drag = true;
-
-				// move div element
-					document.onmousemove=dragDiv;
-                return false;
-				
-			}
-			function dragDiv(e) {
-				if (!drag) {return};
-				if (!e) { var e= window.event};
-				var targ=e.target?e.target:e.srcElement;
-				// move div element
-				targ.style.left=coordX+e.clientX-offsetX+'px';
-				targ.style.top=coordY+e.clientY-offsetY+'px';
-				return false;
-			}
-			function stopDrag() {
-				drag=false;
-			}
-			window.onload = function() {
-				document.onmousedown = startDrag;
-				document.onmouseup = stopDrag;
-			}
-</script>
 
 </body>
 </html>
